@@ -65,7 +65,7 @@ export default function HomePage() {
         // Загружаем категории для графика
         const { data: categoriesData } = await supabase
           .from('categories')
-          .select('name, color')
+          .select('id, name, color')
           .eq('user_id', user.id)
 
         setCategories(categoriesData || [])
