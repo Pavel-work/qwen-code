@@ -27,8 +27,12 @@ export function Header({ onToggleSidebar }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between px-4 py-3 lg:px-8">
-        <div className="flex items-center gap-4">
-          {/* Гамбургер меню - везде */}
+        <div>
+          <h1 className="text-lg font-semibold text-textPrimary">Склад</h1>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {/* Гамбургер меню - справа */}
           <Button
             variant="ghost"
             size="icon"
@@ -42,12 +46,6 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             )}
           </Button>
 
-          <div>
-            <h1 className="text-lg font-semibold text-textPrimary">Склад</h1>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
           <Button variant="ghost" size="icon" className="text-textSecondary hover:text-textPrimary">
             <Bell className="w-5 h-5" />
           </Button>
@@ -78,9 +76,9 @@ export function Header({ onToggleSidebar }: HeaderProps) {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full left-0 right-0 bg-backgroundSecondary border-b border-border z-30"
+              className="absolute top-full right-0 bg-background/80 backdrop-blur-md border border-border z-30 rounded-bl-xl"
             >
-              <nav className="p-4 space-y-2">
+              <nav className="p-4 space-y-2 min-w-[200px]">
                 {menuItems.map((item) => {
                   const Icon = item.icon
                   return (
@@ -93,7 +91,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
                         whileTap={{ scale: 0.98 }}
                         className={cn(
                           "flex items-center gap-3 px-4 py-3 rounded-xl",
-                          "text-textSecondary hover:bg-secondary hover:text-textPrimary",
+                          "text-textSecondary hover:bg-background hover:text-textPrimary",
                           "transition-colors"
                         )}
                       >

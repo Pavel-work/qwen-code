@@ -148,28 +148,26 @@ export default function HomePage() {
       {/* Заголовок с гамбургером */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground border border-border"
-          >
-            {menuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </Button>
-          <div className="flex items-center gap-3">
-            <div className="bg-primary text-primary-foreground p-2 rounded-lg">
-              <Box className="h-8 w-8" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold">СКЛАД</h1>
-              <p className="text-sm text-muted-foreground">Система учёта вещей</p>
-            </div>
+          <div className="bg-primary text-primary-foreground p-2 rounded-lg">
+            <Box className="h-8 w-8" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold">СКЛАД</h1>
+            <p className="text-sm text-muted-foreground">Система учёта вещей</p>
           </div>
         </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground border border-border"
+        >
+          {menuOpen ? (
+            <X className="w-6 h-6" />
+          ) : (
+            <Menu className="w-6 h-6" />
+          )}
+        </Button>
       </div>
 
       {/* Выпадающее меню */}
@@ -181,13 +179,13 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 z-40"
+              className="fixed inset-0 z-40"
             />
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-16 left-0 right-0 bg-secondary border-b z-30 p-4 space-y-2"
+              className="absolute top-16 right-0 bg-background/80 backdrop-blur-md border border-border z-30 p-4 space-y-2 rounded-bl-xl"
             >
               {menuItems.map((item) => {
                 const Icon = item.icon
