@@ -12,9 +12,16 @@ import {
   Boxes,
   AlertTriangle,
   Tag,
+  Home,
+  Search,
+  ScanLine,
+  Plus,
+  Settings,
 } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Card } from '@/components/ui/card'
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -125,6 +132,40 @@ export default function DashboardPage() {
         />
       </div>
 
+      {/* Быстрое меню */}
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <QuickLink
+          href="/"
+          icon={Home}
+          label="Главная"
+          color="bg-blue-500"
+        />
+        <QuickLink
+          href="/search"
+          icon={Search}
+          label="Поиск"
+          color="bg-green-500"
+        />
+        <QuickLink
+          href="/scanner"
+          icon={ScanLine}
+          label="Сканер"
+          color="bg-purple-500"
+        />
+        <QuickLink
+          href="/containers/new"
+          icon={Plus}
+          label="Добавить"
+          color="bg-orange-500"
+        />
+        <QuickLink
+          href="/settings"
+          icon={Settings}
+          label="Настройки"
+          color="bg-pink-500"
+        />
+      </div>
+
       {/* Основной контент */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Последние контейнеры */}
@@ -166,5 +207,33 @@ export default function DashboardPage() {
         <RecentItems />
       </div>
     </div>
+  )
+}
+
+// Компонент быстрой ссылки
+interface QuickLinkProps {
+  href: string
+  icon: any
+  label: string
+  color: string
+}
+
+function QuickLink({ href, icon: Icon, label, color }: QuickLinkProps) {
+  return (
+    <Link href={href}>
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Card className="bg-backgroundSecondary border-border hover:border-primary/50 transition-colors p-4 cursor-pointer">
+          <div className="flex flex-col items-center gap-2">
+            <div className={`p-3 ${color} rounded-xl`}>
+              <Icon className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-sm font-medium text-textPrimary">{label}</span>
+          </div>
+        </Card>
+      </motion.div>
+    </Link>
   )
 }
