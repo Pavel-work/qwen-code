@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Menu, Bell, User, Home, Search, ScanLine, Plus, Settings, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/providers/AuthProvider'
 import { cn } from '@/lib/utils'
-import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface HeaderProps {
@@ -22,7 +22,13 @@ const menuItems = [
 
 export function Header({ onToggleSidebar }: HeaderProps) {
   const { user } = useAuth()
+  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const handleMenuClick = (href: string) => {
+    setMenuOpen(false)
+    router.push(href)
+  }
 
   return (
     <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
@@ -82,23 +88,18 @@ export function Header({ onToggleSidebar }: HeaderProps) {
                 {menuItems.map((item) => {
                   const Icon = item.icon
                   return (
-                    <Link
+                    <div
                       key={item.href}
-                      href={item.href}
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => handleMenuClick(item.href)}
+                      className={cn(
+                        "flex items-center gap-3 px-4 py-3 rounded-xl",
+                        "text-textSecondary hover:bg-background hover:text-textPrimary",
+                        "transition-colors cursor-pointer"
+                      )}
                     >
-                      <motion.div
-                        whileTap={{ scale: 0.98 }}
-                        className={cn(
-                          "flex items-center gap-3 px-4 py-3 rounded-xl",
-                          "text-textSecondary hover:bg-background hover:text-textPrimary",
-                          "transition-colors"
-                        )}
-                      >
-                        <Icon className="w-5 h-5" />
-                        <span className="font-medium">{item.label}</span>
-                      </motion.div>
-                    </Link>
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium">{item.label}</span>
+                    </div>
                   )
                 })}
               </nav>

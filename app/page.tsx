@@ -34,6 +34,11 @@ export default function HomePage() {
   const [chartSeries, setChartSeries] = useState<number[]>([])
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const handleMenuClick = (href: string) => {
+    setMenuOpen(false)
+    router.push(href)
+  }
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
@@ -190,12 +195,14 @@ export default function HomePage() {
               {menuItems.map((item) => {
                 const Icon = item.icon
                 return (
-                  <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
-                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-background hover:text-foreground transition-colors">
-                      <Icon className="w-5 h-5" />
-                      <span className="font-medium">{item.label}</span>
-                    </div>
-                  </Link>
+                  <div
+                    key={item.href}
+                    onClick={() => handleMenuClick(item.href)}
+                    className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-background hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    <Icon className="w-5 h-5" />
+                    <span className="font-medium">{item.label}</span>
+                  </div>
                 )
               })}
             </motion.div>
