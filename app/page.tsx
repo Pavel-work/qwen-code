@@ -194,7 +194,7 @@ export default function HomePage() {
               className="absolute top-16 right-0 z-50 p-4 space-y-2 rounded-bl-xl"
               style={{ 
                 pointerEvents: 'auto',
-                backgroundColor: 'rgb(30, 41, 59)',
+                backgroundColor: 'rgb(145, 193, 245)',
                 border: '1px solid rgb(51, 65, 85)'
               }}
             >

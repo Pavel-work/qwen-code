@@ -85,7 +85,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
               className="absolute top-full right-0 z-50 rounded-bl-xl"
               style={{ 
                 pointerEvents: 'auto',
-                backgroundColor: 'rgb(30, 41, 59)',
+                backgroundColor: 'rgb(145, 193, 245)',
                 border: '1px solid rgb(51, 65, 85)'
               }}
             >
