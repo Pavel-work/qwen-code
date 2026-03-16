@@ -146,12 +146,6 @@ export default function HomePage() {
             <p className="text-sm text-muted-foreground">Система учёта вещей</p>
           </div>
         </div>
-        <Link href="/containers/new">
-          <Button className="gap-2">
-            <Plus className="h-5 w-5" />
-            <span className="hidden sm:inline">Новый контейнер</span>
-          </Button>
-        </Link>
       </div>
 
       {/* Статистика */}
