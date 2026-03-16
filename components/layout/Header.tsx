@@ -28,12 +28,12 @@ export function Header({ onToggleSidebar }: HeaderProps) {
     <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="flex items-center justify-between px-4 py-3 lg:px-8">
         <div className="flex items-center gap-4">
-          {/* Гамбургер меню для мобильных */}
+          {/* Гамбургер меню - везде */}
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="lg:hidden text-textSecondary hover:text-textPrimary"
+            className="text-textSecondary hover:text-textPrimary"
           >
             {menuOpen ? (
               <X className="w-6 h-6" />
@@ -42,17 +42,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             )}
           </Button>
 
-          {/* Кнопка сайдбара для desktop */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onToggleSidebar}
-            className="lg:flex hidden text-textSecondary hover:text-textPrimary"
-          >
-            <Menu className="w-5 h-5" />
-          </Button>
-
-          <div className="lg:hidden">
+          <div>
             <h1 className="text-lg font-semibold text-textPrimary">Склад</h1>
           </div>
         </div>
@@ -70,7 +60,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
         </div>
       </div>
 
-      {/* Выпадающее меню для мобильных */}
+      {/* Выпадающее меню */}
       <AnimatePresence>
         {menuOpen && (
           <>
@@ -80,7 +70,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMenuOpen(false)}
-              className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+              className="fixed inset-0 bg-black/50 z-40"
             />
 
             {/* Выпадающая панель */}
@@ -88,7 +78,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full left-0 right-0 bg-backgroundSecondary border-b border-border z-30 lg:hidden"
+              className="absolute top-full left-0 right-0 bg-backgroundSecondary border-b border-border z-30"
             >
               <nav className="p-4 space-y-2">
                 {menuItems.map((item) => {
