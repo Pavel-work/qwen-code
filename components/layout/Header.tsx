@@ -82,7 +82,8 @@ export function Header({ onToggleSidebar }: HeaderProps) {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full right-0 bg-background/80 backdrop-blur-md border border-border z-30 rounded-bl-xl"
+              className="absolute top-full right-0 bg-background/80 backdrop-blur-md border border-border z-50 rounded-bl-xl"
+              style={{ pointerEvents: 'auto' }}
             >
               <nav className="p-4 space-y-2 min-w-[200px]">
                 {menuItems.map((item) => {
@@ -90,12 +91,16 @@ export function Header({ onToggleSidebar }: HeaderProps) {
                   return (
                     <div
                       key={item.href}
-                      onClick={() => handleMenuClick(item.href)}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleMenuClick(item.href)
+                      }}
                       className={cn(
                         "flex items-center gap-3 px-4 py-3 rounded-xl",
                         "text-textSecondary hover:bg-background hover:text-textPrimary",
                         "transition-colors cursor-pointer"
                       )}
+                      style={{ pointerEvents: 'auto' }}
                     >
                       <Icon className="w-5 h-5" />
                       <span className="font-medium">{item.label}</span>

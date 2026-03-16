@@ -190,15 +190,20 @@ export default function HomePage() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-16 right-0 bg-background/80 backdrop-blur-md border border-border z-30 p-4 space-y-2 rounded-bl-xl"
+              className="absolute top-16 right-0 bg-background/80 backdrop-blur-md border border-border z-50 p-4 space-y-2 rounded-bl-xl pointer-events-auto"
+              style={{ pointerEvents: 'auto' }}
             >
               {menuItems.map((item) => {
                 const Icon = item.icon
                 return (
                   <div
                     key={item.href}
-                    onClick={() => handleMenuClick(item.href)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleMenuClick(item.href)
+                    }}
                     className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-background hover:text-foreground transition-colors cursor-pointer"
+                    style={{ pointerEvents: 'auto' }}
                   >
                     <Icon className="w-5 h-5" />
                     <span className="font-medium">{item.label}</span>
