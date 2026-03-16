@@ -191,8 +191,12 @@ export default function HomePage() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-16 right-0 bg-secondary border border-border z-50 p-4 space-y-2 rounded-bl-xl"
-              style={{ pointerEvents: 'auto' }}
+              className="absolute top-16 right-0 z-50 p-4 space-y-2 rounded-bl-xl"
+              style={{ 
+                pointerEvents: 'auto',
+                backgroundColor: 'rgb(30, 41, 59)',
+                border: '1px solid rgb(51, 65, 85)'
+              }}
             >
               {menuItems.map((item) => {
                 const Icon = item.icon
