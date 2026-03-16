@@ -152,7 +152,7 @@ export default function HomePage() {
             variant="ghost"
             size="icon"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="text-foreground hover:text-primary"
+            className="bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground border border-border"
           >
             {menuOpen ? (
               <X className="w-6 h-6" />

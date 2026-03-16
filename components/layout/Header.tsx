@@ -33,7 +33,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             variant="ghost"
             size="icon"
             onClick={() => setMenuOpen(!menuOpen)}
-            className="text-textSecondary hover:text-textPrimary"
+            className="bg-secondary text-foreground hover:bg-primary hover:text-primary-foreground border border-border"
           >
             {menuOpen ? (
               <X className="w-6 h-6" />
