@@ -36,7 +36,8 @@ export default function HomePage() {
 
   const handleMenuClick = (href: string) => {
     setMenuOpen(false)
-    router.push(href)
+    // Используем window.location для надёжности
+    window.location.href = href
   }
 
   useEffect(() => {

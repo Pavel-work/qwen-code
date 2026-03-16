@@ -82,7 +82,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full right-0 bg-background/80 backdrop-blur-md border border-border z-50 rounded-bl-xl"
+              className="absolute top-full right-0 bg-secondary border border-border z-50 rounded-bl-xl"
               style={{ pointerEvents: 'auto' }}
             >
               <nav className="p-4 space-y-2 min-w-[200px]">
