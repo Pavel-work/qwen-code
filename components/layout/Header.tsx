@@ -1,23 +1,45 @@
 'use client'
 
-import { useOnlineStatus } from '@/hooks/use-online-status'
-import { Wifi, WifiOff } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import { Menu, Bell, User } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/providers/AuthProvider'
 
-export function OnlineStatus() {
-  const isOnline = useOnlineStatus()
+interface HeaderProps {
+  onToggleSidebar: () => void
+}
+
+export function Header({ onToggleSidebar }: HeaderProps) {
+  const { user } = useAuth()
 
   return (
-    <div className={cn(
-      'flex items-center gap-1 text-xs',
-      isOnline ? 'text-green-600' : 'text-red-600'
-    )}>
-      {isOnline ? (
-        <Wifi className="h-4 w-4" />
-      ) : (
-        <WifiOff className="h-4 w-4" />
-      )}
-      <span className="hidden sm:inline">{isOnline ? 'Онлайн' : 'Оффлайн'}</span>
-    </div>
+    <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
+      <div className="flex items-center justify-between px-4 py-3 lg:px-8">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onToggleSidebar}
+            className="lg:flex hidden text-textSecondary hover:text-textPrimary"
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
+          <div className="lg:hidden">
+            <h1 className="text-lg font-semibold text-textPrimary">Склад</h1>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" className="text-textSecondary hover:text-textPrimary">
+            <Bell className="w-5 h-5" />
+          </Button>
+          <div className="flex items-center gap-2 px-3 py-2 bg-secondary rounded-xl">
+            <User className="w-5 h-5 text-textSecondary" />
+            <span className="text-sm text-textSecondary hidden sm:inline">
+              {user?.email?.split('@')[0]}
+            </span>
+          </div>
+        </div>
+      </div>
+    </header>
   )
 }

@@ -1,88 +1,170 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/providers/AuthProvider'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Package, Plus } from 'lucide-react'
-import Link from 'next/link'
-import { useContainers } from '@/hooks/use-containers'
-import { ContainerList } from '@/components/containers/ContainerList'
+import { StatCard } from '@/components/dashboard/StatCard'
+import { ContainerCard } from '@/components/dashboard/ContainerCard'
+import { RecentItems } from '@/components/dashboard/RecentItems'
+import { CategoryChart } from '@/components/dashboard/CategoryChart'
+import {
+  Package,
+  Boxes,
+  AlertTriangle,
+  Tag,
+} from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
+import Link from 'next/link'
 
-export default function HomePage() {
-  const { user, signOut } = useAuth()
-  const { containers, loading, deleteContainer } = useContainers()
+export default function DashboardPage() {
+  const { user } = useAuth()
 
-  const handleDelete = async (id: string) => {
-    if (confirm('Вы уверены, что хотите удалить этот контейнер?')) {
-      try {
-        await deleteContainer(id)
-      } catch (err) {
-        alert('Ошибка при удалении')
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ['dashboard-stats'],
+    queryFn: async () => {
+      const { count: containersCount } = await supabase
+        .from('containers')
+        .select('id', { count: 'exact' })
+        .eq('user_id', user?.id)
+
+      const { data: itemsData } = await supabase
+        .from('items')
+        .select('quantity')
+        .eq('user_id', user?.id)
+
+      const totalItems = itemsData?.reduce((acc, item) => acc + (item.quantity || 0), 0) || 0
+
+      const { count: lowStockCount } = await supabase
+        .from('items')
+        .select('id', { count: 'exact' })
+        .eq('user_id', user?.id)
+        .lte('quantity', 2)
+
+      const { count: categoriesCount } = await supabase
+        .from('categories')
+        .select('id', { count: 'exact' })
+        .eq('user_id', user?.id)
+
+      return {
+        containers: containersCount || 0,
+        items: totalItems,
+        lowStock: lowStockCount || 0,
+        categories: categoriesCount || 0,
       }
-    }
+    },
+    enabled: !!user,
+  })
+
+  const { data: recentContainers } = useQuery({
+    queryKey: ['recent-containers'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('containers')
+        .select('*')
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false })
+        .limit(5)
+      return data
+    },
+    enabled: !!user,
+  })
+
+  if (isLoading || !stats) {
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <Skeleton key={i} className="h-40 rounded-2xl" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <Skeleton className="h-96 lg:col-span-2" />
+          <Skeleton className="h-96" />
+        </div>
+      </div>
+    )
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Мои контейнеры</h1>
-        <div className="flex gap-2">
-          <Link href="/categories">
-            <Button variant="outline">Категории</Button>
-          </Link>
-          <Button onClick={signOut} variant="outline">
-            Выйти
-          </Button>
+    <div className="space-y-6">
+      {/* Заголовок */}
+      <div>
+        <h1 className="text-3xl font-bold text-textPrimary mb-2">
+          Добро пожаловать! 👋
+        </h1>
+        <p className="text-textSecondary">
+          Обзор вашего склада
+        </p>
+      </div>
+
+      {/* Статистика */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Контейнеры"
+          value={stats.containers}
+          icon={Boxes}
+          gradient="from-blue-500 to-blue-600"
+        />
+        <StatCard
+          title="Всего вещей"
+          value={stats.items}
+          icon={Package}
+          gradient="from-green-500 to-emerald-600"
+        />
+        <StatCard
+          title="Заканчивается"
+          value={stats.lowStock}
+          icon={AlertTriangle}
+          gradient="from-orange-500 to-amber-600"
+        />
+        <StatCard
+          title="Категории"
+          value={stats.categories}
+          icon={Tag}
+          gradient="from-purple-500 to-violet-600"
+        />
+      </div>
+
+      {/* Основной контент */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Последние контейнеры */}
+        <div className="lg:col-span-2 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-textPrimary">
+              Последние контейнеры
+            </h2>
+            <Link href="/containers" className="text-sm text-primary hover:text-primary/80">
+              Смотреть все
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {recentContainers?.map((container) => (
+              <ContainerCard key={container.id} container={container} />
+            ))}
+            {!recentContainers?.length && (
+              <div className="text-center text-textSecondary py-8">
+                Нет контейнеров. Создайте первый!
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* График категорий */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold text-textPrimary">
+            Распределение
+          </h2>
+          <CategoryChart />
         </div>
       </div>
 
-      <Card className="mb-4">
-        <CardHeader>
-          <CardTitle>Добро пожаловать!</CardTitle>
-          <CardDescription>
-            {user?.email}
-          </CardDescription>
-        </CardHeader>
-      </Card>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mb-4">
-        <Link href="/containers/new">
-          <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5" />
-                Новый контейнер
-              </CardTitle>
-              <CardDescription>
-                Создайте новый контейнер для вещей
-              </CardDescription>
-            </CardHeader>
-          </Card>
-        </Link>
+      {/* Недавние добавления */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold text-textPrimary">
+          Недавние вещи
+        </h2>
+        <RecentItems />
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Package className="h-5 w-5" />
-            Контейнеры
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="space-y-4">
-              <Skeleton className="h-32 w-full" />
-              <Skeleton className="h-32 w-full" />
-            </div>
-          ) : (
-            <ContainerList
-              containers={containers}
-              onDelete={handleDelete}
-            />
-          )}
-        </CardContent>
-      </Card>
     </div>
   )
 }
