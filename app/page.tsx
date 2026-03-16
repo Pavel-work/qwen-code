@@ -8,11 +8,20 @@ import { useContainers } from '@/hooks/use-containers'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Package, AlertTriangle, CheckCircle, Plus, FolderOpen, Tags, Search, ScanLine, Settings, Box, Layers } from 'lucide-react'
+import { Package, AlertTriangle, CheckCircle, Plus, FolderOpen, Tags, Search, ScanLine, Settings, Box, Layers, Menu, X, Home } from 'lucide-react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false })
+
+const menuItems = [
+  { href: '/', icon: Home, label: 'Главная' },
+  { href: '/search', icon: Search, label: 'Поиск' },
+  { href: '/scanner', icon: ScanLine, label: 'Сканер' },
+  { href: '/containers/new', icon: Plus, label: 'Добавить' },
+  { href: '/settings', icon: Settings, label: 'Настройки' },
+]
 
 export default function HomePage() {
   const router = useRouter()
@@ -23,6 +32,7 @@ export default function HomePage() {
   const [categories, setCategories] = useState<any[]>([])
   const [chartOptions, setChartOptions] = useState<any>({})
   const [chartSeries, setChartSeries] = useState<number[]>([])
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -135,18 +145,65 @@ export default function HomePage() {
 
   return (
     <div className="p-4 space-y-4">
-      {/* Заголовок */}
+      {/* Заголовок с гамбургером */}
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-3">
-          <div className="bg-primary text-primary-foreground p-2 rounded-lg">
-            <Box className="h-8 w-8" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">СКЛАД</h1>
-            <p className="text-sm text-muted-foreground">Система учёта вещей</p>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-foreground hover:text-primary"
+          >
+            {menuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </Button>
+          <div className="flex items-center gap-3">
+            <div className="bg-primary text-primary-foreground p-2 rounded-lg">
+              <Box className="h-8 w-8" />
+            </div>
+            <div>
+              <h1 className="text-3xl font-bold">СКЛАД</h1>
+              <p className="text-sm text-muted-foreground">Система учёта вещей</p>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Выпадающее меню */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMenuOpen(false)}
+              className="fixed inset-0 bg-black/50 z-40"
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute top-16 left-0 right-0 bg-secondary border-b z-30 p-4 space-y-2"
+            >
+              {menuItems.map((item) => {
+                const Icon = item.icon
+                return (
+                  <Link key={item.href} href={item.href} onClick={() => setMenuOpen(false)}>
+                    <div className="flex items-center gap-3 px-4 py-3 rounded-xl text-muted-foreground hover:bg-background hover:text-foreground transition-colors">
+                      <Icon className="w-5 h-5" />
+                      <span className="font-medium">{item.label}</span>
+                    </div>
+                  </Link>
+                )
+              })}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Статистика */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
