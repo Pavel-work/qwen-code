@@ -191,7 +191,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-16 right-0 bg-background/80 backdrop-blur-md border border-border z-50 p-4 space-y-2 rounded-bl-xl pointer-events-auto"
+              className="absolute top-16 right-0 bg-secondary border border-border z-50 p-4 space-y-2 rounded-bl-xl"
               style={{ pointerEvents: 'auto' }}
             >
               {menuItems.map((item) => {
